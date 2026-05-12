@@ -14,6 +14,7 @@ def send():
     template = data.get("template", "")
     subject = data.get("subject", "")
     rows = data.get("rows", [])
+    cc = data.get("cc") or []
     delay = max(5, min(60, int(data.get("delay", DEFAULT_DELAY))))
 
     if len(rows) > MAX_PER_DAY:
@@ -32,7 +33,7 @@ def send():
                 html = render(template, row)
                 subj = render(subject, row)
                 to = row.get("email") or row.get("Email") or row.get("EMAIL", "")
-                send_email(to, subj, html)
+                send_email(to, subj, html, cc)
                 yield f"data: {json.dumps({'i': i, 'total': total, 'to': to, 'status': 'ok'})}\n\n"
                 sent += 1
             except (TemplateError, Exception) as e:

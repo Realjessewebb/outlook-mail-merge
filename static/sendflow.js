@@ -41,7 +41,7 @@ async function dryRun() {
 
 async function confirmAndSend() {
   const rows = getRows();
-  const { template, subject, delay } = getCompose();
+  const { template, subject, delay, cc } = getCompose();
 
   if (!rows.length) { alert("Upload a recipient file first."); return; }
   if (!subject.trim()) { alert("Subject line is empty."); return; }
@@ -73,7 +73,7 @@ async function confirmAndSend() {
     const resp = await fetch("/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ template, subject, rows, delay })
+      body: JSON.stringify({ template, subject, rows, delay, cc })
     });
 
     const reader = resp.body.getReader();

@@ -11,10 +11,13 @@ fetch("/static/config.json").catch(() => {});
 })();
 
 function getCompose() {
+  const ccRaw = document.getElementById("cc").value;
+  const cc = ccRaw.split(",").map(s => s.trim()).filter(Boolean);
   return {
     template: document.getElementById("body").value,
     subject: document.getElementById("subject").value,
-    delay: parseInt(document.getElementById("delay").value)
+    delay: parseInt(document.getElementById("delay").value),
+    cc
   };
 }
 
