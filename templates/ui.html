@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mail Merge</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: monospace; font-size: 13px; background: #1a1a1a; color: #d4d4d4; height: 100vh; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 100vh; gap: 0; }
+
+  .panel { padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; border-right: 1px solid #333; }
+  .panel:last-child { border-right: none; }
+
+  h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 4px; }
+
+  label { font-size: 11px; color: #888; display: block; margin-bottom: 3px; }
+  input[type=text], textarea, select {
+    width: 100%; background: #111; border: 1px solid #333; color: #d4d4d4;
+    font-family: monospace; font-size: 13px; padding: 6px 8px; border-radius: 3px;
+  }
+  textarea { resize: vertical; min-height: 180px; }
+  input[type=file] { color: #d4d4d4; font-family: monospace; font-size: 13px; }
+
+  input[type=range] { width: 100%; accent-color: #4a9eff; }
+
+  button {
+    padding: 7px 14px; border: 1px solid #444; border-radius: 3px; background: #222;
+    color: #d4d4d4; font-family: monospace; font-size: 13px; cursor: pointer;
+  }
+  button:hover { background: #2a2a2a; border-color: #666; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary { background: #1a3a5c; border-color: #4a9eff; color: #4a9eff; }
+  button.primary:hover { background: #1e4570; }
+
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .from-line { background: #111; border: 1px solid #333; padding: 6px 8px; border-radius: 3px; color: #888; }
+
+  #delay-label { font-size: 11px; color: #aaa; }
+
+  .section { display: flex; flex-direction: column; gap: 6px; }
+
+  #recipient-table-wrap { overflow-x: auto; max-height: 160px; overflow-y: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th { background: #222; padding: 4px 8px; text-align: left; border-bottom: 1px solid #333; color: #888; position: sticky; top: 0; }
+  td { padding: 3px 8px; border-bottom: 1px solid #222; white-space: nowrap; }
+  tr:hover td { background: #1e1e1e; }
+
+  #preview-panel { display: flex; flex-direction: column; gap: 6px; }
+  #preview-subject { font-size: 12px; color: #aaa; padding: 4px 0; min-height: 18px; }
+  iframe {
+    width: 100%; height: 260px; border: 1px solid #333; border-radius: 3px;
+    background: #fff;
+  }
+
+  #send-log { display: flex; flex-direction: column; gap: 6px; }
+  progress { width: 100%; height: 6px; accent-color: #4a9eff; }
+  #log-lines { font-size: 12px; max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+  .log-ok   { color: #6fcf97; }
+  .log-err  { color: #eb5757; }
+  .log-info { color: #888; }
+  #summary  { font-size: 12px; color: #aaa; min-height: 16px; }
+</style>
+</head>
+<body>
+
+<div class="panel" id="compose-panel">
+  <h2>Compose</h2>
+
+  <div class="section">
+    <label>From</label>
+    <div class="from-line" id="from-display">loading…</div>
+  </div>
+
+  <div class="section">
+    <label>Subject</label>
+    <input type="text" id="subject" placeholder="Hello {{ first_name }}">
+  </div>
+
+  <div class="section">
+    <label>Body (HTML + Jinja2)</label>
+    <textarea id="body" placeholder="<p>Hi {{ first_name }},</p>&#10;<p>Your message here.</p>"></textarea>
+  </div>
+
+  <div class="section">
+    <label id="delay-label">Delay between sends: 15s</label>
+    <input type="range" id="delay" min="5" max="60" value="15">
+  </div>
+
+  <div class="btn-row">
+    <button id="btn-preview">Preview</button>
+    <button id="btn-dryrun">Dry Run</button>
+    <button class="primary" id="btn-send">Send</button>
+  </div>
+</div>
+
+<div class="panel" id="right-panel">
+
+  <div class="section">
+    <h2>Recipients</h2>
+    <input type="file" id="file-input" accept=".csv,.xlsx">
+    <div id="recipient-table-wrap"></div>
+    <div>
+      <label>Preview recipient</label>
+      <select id="recipient-select"><option value="">— upload a file —</option></select>
+    </div>
+  </div>
+
+  <div id="preview-panel" class="section">
+    <h2>Preview</h2>
+    <div id="preview-subject"></div>
+    <iframe id="preview-frame" srcdoc="<body style='font-family:sans-serif;color:#666;padding:20px'>Upload a file and click Preview.</body>"></iframe>
+  </div>
+
+  <div id="send-log" class="section">
+    <h2>Send Log</h2>
+    <progress id="progress" value="0" max="1"></progress>
+    <div id="log-lines"></div>
+    <div id="summary"></div>
+  </div>
+
+</div>
+
+<script src="/static/datatable.js"></script>
+<script src="/static/preview.js"></script>
+<script src="/static/compose.js"></script>
+<script src="/static/sendflow.js"></script>
+</body>
+</html>

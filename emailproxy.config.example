@@ -1,0 +1,16 @@
+[emailproxy]
+local_address = localhost
+
+[account-jesse]
+permission_url = https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+token_url      = https://login.microsoftonline.com/common/oauth2/v2.0/token
+oauth2_scope   = https://outlook.office365.com/SMTP.Send offline_access
+client_id      = 27922004-5251-4030-b22d-91ecd9a37ea4
+redirect_uri   = http://localhost:8080
+
+[SMTP-jesse]
+local_address  = localhost
+local_port     = 1025
+server_address = smtp.office365.com
+server_port    = 587
+account        = YOUR_LMU_EMAIL@lmu.edu

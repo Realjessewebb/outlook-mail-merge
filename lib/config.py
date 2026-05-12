@@ -1,0 +1,5 @@
+SMTP_HOST     = "localhost"
+SMTP_PORT     = 1025
+FROM_EMAIL    = "YOUR_LMU_EMAIL@lmu.edu"
+DEFAULT_DELAY = 15
+MAX_PER_DAY   = 500

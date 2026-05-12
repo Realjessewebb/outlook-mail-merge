@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+emailproxy.config
+data/*.csv
+data/*.xlsx
+*.token
