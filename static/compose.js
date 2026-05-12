@@ -1,5 +1,3 @@
-fetch("/static/config.json").catch(() => {});
-
 (async () => {
   try {
     const resp = await fetch("/from_email");
@@ -10,11 +8,19 @@ fetch("/static/config.json").catch(() => {});
   }
 })();
 
+window.quill = new Quill("#body-editor", {
+  theme: "snow",
+  placeholder: "Hi {{ first_name }}, …",
+  modules: {
+    toolbar: ["bold", "italic", "underline", "link", { list: "ordered" }, { list: "bullet" }]
+  }
+});
+
 function getCompose() {
   const ccRaw = document.getElementById("cc").value;
   const cc = ccRaw.split(",").map(s => s.trim()).filter(Boolean);
   return {
-    template: document.getElementById("body").value,
+    template: window.quill.root.innerHTML,
     subject: document.getElementById("subject").value,
     delay: parseInt(document.getElementById("delay").value),
     cc

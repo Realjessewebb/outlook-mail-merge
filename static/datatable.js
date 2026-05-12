@@ -26,6 +26,7 @@ document.getElementById("file-input").addEventListener("change", async function 
 
   renderTable(_rows.slice(0, 5), _columns);
   populateDropdown(_rows, _columns);
+  renderVariableChips(_columns);
 });
 
 function renderTable(rows, columns) {
@@ -61,6 +62,27 @@ document.getElementById("recipient-select").addEventListener("change", function 
 
 function dispatchRecipientChanged(row) {
   document.dispatchEvent(new CustomEvent("recipientChanged", { detail: { row } }));
+}
+
+function renderVariableChips(columns) {
+  const wrap = document.getElementById("variable-chips");
+  const lbl  = document.getElementById("variable-chips-label");
+  wrap.innerHTML = "";
+  if (!columns.length) { lbl.style.display = "none"; return; }
+  lbl.style.display = "block";
+  columns.forEach(col => {
+    const btn = document.createElement("button");
+    btn.className = "chip";
+    btn.textContent = col;
+    btn.title = `Insert {{ ${col} }}`;
+    btn.addEventListener("click", () => {
+      const q = window.quill;
+      const range = q.getSelection(true);
+      q.insertText(range.index, `{{ ${col} }}`);
+      q.setSelection(range.index + col.length + 6);
+    });
+    wrap.appendChild(btn);
+  });
 }
 
 function esc(str) {
