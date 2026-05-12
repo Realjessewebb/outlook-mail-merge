@@ -14,4 +14,6 @@ def send_email(to: str, subject: str, html: str, cc: list[str] | None = None) ->
 
     recipients = [to] + (cc or [])
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
+        smtp.ehlo()
+        smtp.login(FROM_EMAIL, "emailproxy")
         smtp.sendmail(FROM_EMAIL, recipients, msg.as_string())

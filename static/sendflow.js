@@ -1,3 +1,5 @@
+let _cancelSend = false;
+
 function logLine(text, cls) {
   const div = document.createElement("div");
   div.className = cls || "log-info";
@@ -57,9 +59,13 @@ async function confirmAndSend() {
   );
   if (!ok) return;
 
+  _cancelSend = false;
   clearLog();
-  const sendBtn = document.getElementById("btn-send");
+
+  const sendBtn   = document.getElementById("btn-send");
+  const cancelBtn = document.getElementById("btn-cancel");
   sendBtn.disabled = true;
+  cancelBtn.style.display = "inline-block";
 
   const progress = document.getElementById("progress");
   progress.max = rows.length;
@@ -81,6 +87,12 @@ async function confirmAndSend() {
     let buf = "";
 
     while (true) {
+      if (_cancelSend) {
+        reader.cancel();
+        logLine("⚠ Send cancelled by user.", "log-err");
+        break;
+      }
+
       const { value, done } = await reader.read();
       if (done) break;
       buf += decoder.decode(value, { stream: true });
@@ -110,10 +122,16 @@ async function confirmAndSend() {
       }
     }
   } catch (e) {
-    logLine("Connection error: " + e.message, "log-err");
+    if (!_cancelSend) logLine("Connection error: " + e.message, "log-err");
   }
 
-  progress.value = rows.length;
+  progress.value = _cancelSend ? progress.value : rows.length;
   document.getElementById("summary").textContent = `Done — ${sent} sent, ${failed} failed`;
   sendBtn.disabled = false;
+  cancelBtn.style.display = "none";
+  _cancelSend = false;
+}
+
+function cancelSend() {
+  _cancelSend = true;
 }
