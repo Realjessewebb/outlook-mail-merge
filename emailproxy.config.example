@@ -1,7 +1,7 @@
 [emailproxy]
 local_address = localhost
 
-[account-jesse]
+[YOUR_LMU_EMAIL@lmu.edu]
 permission_url = https://login.microsoftonline.com/common/oauth2/v2.0/authorize
 token_url      = https://login.microsoftonline.com/common/oauth2/v2.0/token
 oauth2_scope   = https://outlook.office365.com/SMTP.Send offline_access
